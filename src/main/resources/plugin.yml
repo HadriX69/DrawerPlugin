@@ -1,0 +1,11 @@
+name: drawer
+version: '${version}'
+
+main: fr.hadrix.drawer.Drawer
+api-version: '1.21'
+commands:
+
+  givedrawer:
+    description: give a drawer
+    permission: drawer.give
+
