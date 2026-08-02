@@ -144,25 +144,13 @@ public class GiveDrawer implements CommandExecutor, Listener {
                         New_Drawer.MaterialQuantity = DrawerQuantityInt;
                         New_Drawer.MaterialType = DrawerType;
 
-                        /*
-                        ItemFrame frame = blockPose.getWorld().spawn(blockPose.getLocation(), ItemFrame.class, entity -> {
-                            entity.setItem(new ItemStack(Material.valueOf(New_Drawer.MaterialType)));
-
-                            entity.setVisible(false);
-
-                            entity.setFixed(true);
-                            entity.setInvulnerable(true);
-                        });
-                        */
-
                         BlockData blockData = blockPose.getBlockData();
                         final BlockFace face;
 
-                        // 3. On lui donne sa valeur UNE SEULE FOIS
                         if (blockData instanceof org.bukkit.block.data.Directional) {
                             face = ((org.bukkit.block.data.Directional) blockData).getFacing();
                         } else {
-                            face = BlockFace.NORTH; // Valeur par défaut si ce n'est pas un bloc directionnel
+                            face = BlockFace.NORTH;
                         }
 
                         Location frameLoc = blockPose.getLocation().add(0.5, 0.5, 0.5).add(face.getDirection().multiply(0.5));
@@ -172,7 +160,7 @@ public class GiveDrawer implements CommandExecutor, Listener {
                             entity.setVisible(false);
                             entity.setFixed(true);
                             entity.setInvulnerable(true);
-                            entity.setFacingDirection(face); // TRES IMPORTANT : Oriente le cadre pour qu'il soit plat
+                            entity.setFacingDirection(face);
                         });
 
                         New_Drawer.itemFrameUUID = frame.getUniqueId();
@@ -248,7 +236,7 @@ public class GiveDrawer implements CommandExecutor, Listener {
                         if (blockData instanceof org.bukkit.block.data.Directional) {
                             face = ((org.bukkit.block.data.Directional) blockData).getFacing();
                         } else {
-                            face = BlockFace.NORTH; // Valeur par défaut si ce n'est pas un bloc directionnel
+                            face = BlockFace.NORTH;
                         }
 
                         Location frameLoc = InteractBlock.getLocation().add(0.5, 0.5, 0.5).add(face.getDirection().multiply(0.5));
@@ -258,7 +246,7 @@ public class GiveDrawer implements CommandExecutor, Listener {
                             entity.setVisible(false);
                             entity.setFixed(true);
                             entity.setInvulnerable(true);
-                            entity.setFacingDirection(face); // TRES IMPORTANT : Oriente le cadre pour qu'il soit plat
+                            entity.setFacingDirection(face);
                         });
 
                         drawer.itemFrameUUID = frame.getUniqueId();
