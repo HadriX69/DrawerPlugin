@@ -4,9 +4,11 @@ import fr.hadrix.drawer.Drawer;
 import fr.hadrix.drawer.DrawerBlock;
 import org.bukkit.*;
 import org.bukkit.block.*;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -142,6 +144,7 @@ public class GiveDrawer implements CommandExecutor, Listener {
                         New_Drawer.MaterialQuantity = DrawerQuantityInt;
                         New_Drawer.MaterialType = DrawerType;
 
+                        /*
                         ItemFrame frame = blockPose.getWorld().spawn(blockPose.getLocation(), ItemFrame.class, entity -> {
                             entity.setItem(new ItemStack(Material.valueOf(New_Drawer.MaterialType)));
 
@@ -149,6 +152,27 @@ public class GiveDrawer implements CommandExecutor, Listener {
 
                             entity.setFixed(true);
                             entity.setInvulnerable(true);
+                        });
+                        */
+
+                        BlockData blockData = blockPose.getBlockData();
+                        final BlockFace face;
+
+                        // 3. On lui donne sa valeur UNE SEULE FOIS
+                        if (blockData instanceof org.bukkit.block.data.Directional) {
+                            face = ((org.bukkit.block.data.Directional) blockData).getFacing();
+                        } else {
+                            face = BlockFace.NORTH; // Valeur par défaut si ce n'est pas un bloc directionnel
+                        }
+
+                        Location frameLoc = blockPose.getLocation().add(0.5, 0.5, 0.5).add(face.getDirection().multiply(0.5));
+
+                        ItemFrame frame = blockPose.getWorld().spawn(frameLoc, ItemFrame.class, entity -> {
+                            entity.setItem(new ItemStack(Material.valueOf(New_Drawer.MaterialType)));
+                            entity.setVisible(false);
+                            entity.setFixed(true);
+                            entity.setInvulnerable(true);
+                            entity.setFacingDirection(face); // TRES IMPORTANT : Oriente le cadre pour qu'il soit plat
                         });
 
                         New_Drawer.itemFrameUUID = frame.getUniqueId();
@@ -218,16 +242,27 @@ public class GiveDrawer implements CommandExecutor, Listener {
 
                         player.getInventory().setItemInMainHand(null);
 
-                        ItemFrame frame = world.spawn(InteractBlock.getLocation(), ItemFrame.class, entity -> {
+                        BlockData blockData = InteractBlock.getBlockData();
+                        final BlockFace face;
+
+                        if (blockData instanceof org.bukkit.block.data.Directional) {
+                            face = ((org.bukkit.block.data.Directional) blockData).getFacing();
+                        } else {
+                            face = BlockFace.NORTH; // Valeur par défaut si ce n'est pas un bloc directionnel
+                        }
+
+                        Location frameLoc = InteractBlock.getLocation().add(0.5, 0.5, 0.5).add(face.getDirection().multiply(0.5));
+
+                        ItemFrame frame = InteractBlock.getWorld().spawn(frameLoc, ItemFrame.class, entity -> {
                             entity.setItem(new ItemStack(Material.valueOf(drawer.MaterialType)));
-
                             entity.setVisible(false);
-
                             entity.setFixed(true);
                             entity.setInvulnerable(true);
+                            entity.setFacingDirection(face); // TRES IMPORTANT : Oriente le cadre pour qu'il soit plat
                         });
 
                         drawer.itemFrameUUID = frame.getUniqueId();
+
 
                     }
                     else if (drawer.MaterialType.equals(itemInHand.getType().name()))
@@ -336,7 +371,10 @@ public class GiveDrawer implements CommandExecutor, Listener {
 
                     if (drawer.MaterialQuantity == 0) {
                         drawer.MaterialType = "AIR";
-                        Bukkit.getEntity(drawer.itemFrameUUID).remove();
+                        Entity frameEntity = Bukkit.getEntity(drawer.itemFrameUUID);
+                        if (frameEntity != null) {
+                            frameEntity.remove();
+                        }
                     }
                 }
                 break;
@@ -348,6 +386,7 @@ public class GiveDrawer implements CommandExecutor, Listener {
     public void BlockBreakEvent(BlockBreakEvent event) {
         Player player = event.getPlayer();
         Block BreakBlock = event.getBlock();
+        DrawerBlock DrawertoRemove = null;
 
         for (DrawerBlock drawer : DrawerList) {
             World world = Bukkit.getWorld(drawer.WorldName);
@@ -357,11 +396,7 @@ public class GiveDrawer implements CommandExecutor, Listener {
             Location drawerLoc = new Location(world, drawer.LocationX, drawer.LocationY, drawer.LocationZ);
 
             if (drawerLoc.equals(BreakBlock.getLocation())) {
-                DrawerList.remove(drawer);
-                if(drawer.itemFrameUUID != null)
-                {
-                    Bukkit.getEntity(drawer.itemFrameUUID).remove();
-                }
+                DrawertoRemove = drawer;
                 event.setDropItems(false);
 
                 ItemStack Drawer = new ItemStack(Material.OAK_PLANKS, 1);
@@ -389,6 +424,17 @@ public class GiveDrawer implements CommandExecutor, Listener {
                 Drawer.setItemMeta(DrawerMeta);
                 BreakBlock.getWorld().dropItemNaturally(BreakBlock.getLocation(), Drawer);
                 break;
+            }
+        }
+        if(DrawertoRemove != null)
+        {
+            DrawerList.remove(DrawertoRemove);
+            if (DrawertoRemove.itemFrameUUID != null) {
+                Entity frameEntity = Bukkit.getEntity(DrawertoRemove.itemFrameUUID);
+                if (frameEntity != null)
+                {
+                    frameEntity.remove();
+                }
             }
         }
     }
@@ -435,10 +481,10 @@ public class GiveDrawer implements CommandExecutor, Listener {
     @EventHandler
     public void InventoryCloseEvent(InventoryCloseEvent event)
     {
-        Inventory inv = event.getInventory();
-        Player player = event.getPlayer().getKiller();
+        //Inventory inv = event.getInventory();
+        Player player = (Player)event.getPlayer();
 
-        if(inv.getType().name().equals("Drawer"))
+        if(event.getView().getTitle().equals("Drawer"))
         {
             openedDrawers.remove(player);
         }
