@@ -8,10 +8,12 @@ This Plugin add drawer to Minecraft like the [Storage Drawers Mod](https://www.c
 
 ## Commands :
 ```
-/givedrawer : give you an empty drawer
+/drawer give : give you an empty drawer
+/drawer give <player_name> : give an empty drawer to the designated player
+/drawer list : List the Returns the number of drawers existing on the server
 ```
 ## Craft :
-I'm working on that
+__8 oak planks with a chest in the middle__
 
 ## Drawer input
 **Sneak + Right Click :** Open the Drawer Interface\
