@@ -16,10 +16,10 @@ This Plugin add drawer to Minecraft like the [Storage Drawers Mod](https://www.c
 __8 oak planks with a chest in the middle__
 
 ## Drawer input
-**Sneak + Right Click :** Open the Drawer Interface\
-**Right Click :** if you have a block or an item in your main hand and the drawer is empty or contains the same block/item you  are holding in your hand, it stock it\
-**Left Click :** if the drawer is not empty it's will give you 1 block/item from the drawer\
-**Sneak + Left Click :** if the drawer is not empty it's will give you 64 or less (if the drawer contain less of 64 blocks/items) blocks/items
+- **Sneak + Right Click :** Open the Drawer Interface\
+- **Right Click :** if you have a block or an item in your main hand and the drawer is empty or contains the same block/item you  are holding in your hand, it stock it\
+- **Left Click :** if the drawer is not empty it's will give you 1 block/item from the drawer\
+- **Sneak + Left Click :** if the drawer is not empty it's will give you 64 or less (if the drawer contain less of 64 blocks/items) blocks/items
 
 ## ⚙️ How work this Plugin
 when you start the server with the plugin a folder name **DrawerList** with a file name **DrawerList.json** will be create in your plugin file
