@@ -79,19 +79,61 @@ public class GiveDrawer implements CommandExecutor, Listener {
 
         if (sender instanceof Player) {
             Player player = (Player) sender;
+            if(cmd.getName().equals("drawer") && args.length == 0)
+            {
+                player.sendMessage("[Drawer Help]");
+                player.sendMessage("/drawer list : Returns the number of drawers existing on the server");
+                player.sendMessage("/drawer give <player_name> : Give a drawer");
+                return true;
+            }
+            else if (args.length > 0)
+            {
+                if(args[0].equalsIgnoreCase("list"))
+                {
+                    player.sendMessage("§e There is " + DrawerList.size() + "§e on the server !");
+                    return true;
+                }
+                if(args[0].equalsIgnoreCase("give"))
+                {
+                    if(args.length == 1)
+                    {
+                        ItemStack Drawer = new ItemStack(Material.OAK_PLANKS, 1);
+                        ItemMeta DrawerMeta = Drawer.getItemMeta();
 
-            ItemStack Drawer = new ItemStack(Material.OAK_PLANKS, 1);
-            ItemMeta DrawerMeta = Drawer.getItemMeta();
+                        DrawerMeta.setDisplayName("Drawer");
+                        DrawerMeta.setItemName("Drawer");
+                        DrawerMeta.setLore(Arrays.asList("Empty Drawer","","Color : BLACK_STAINED_GLASS_PANE"));
+                        Drawer.setItemMeta(DrawerMeta);
 
-            DrawerMeta.setDisplayName("Drawer");
-            DrawerMeta.setItemName("Drawer");
-            DrawerMeta.setLore(Arrays.asList("Empty Drawer","","Color : BLACK_STAINED_GLASS_PANE"));
-            Drawer.setItemMeta(DrawerMeta);
+                        //drawer settings
+                        player.getInventory().addItem(Drawer);
 
-            //drawer settings
-            player.getInventory().addItem(Drawer);
+                        return true;
+                    }
+                    else if (args.length == 2)
+                    {
+                        if(Bukkit.getPlayer(args[1]) != null)
+                        {
+                            Player giveplayer = Bukkit.getPlayerExact(args[1]);
+                            ItemStack Drawer = new ItemStack(Material.OAK_PLANKS, 1);
+                            ItemMeta DrawerMeta = Drawer.getItemMeta();
 
-            return true;
+                            DrawerMeta.setDisplayName("Drawer");
+                            DrawerMeta.setItemName("Drawer");
+                            DrawerMeta.setLore(Arrays.asList("Empty Drawer","","Color : BLACK_STAINED_GLASS_PANE"));
+                            Drawer.setItemMeta(DrawerMeta);
+
+                            //drawer settings
+                            giveplayer.getInventory().addItem(Drawer);
+                            return true;
+                        } else
+                        {
+                            player.sendMessage("§2 The player does not exist or is not connected");
+                            return true;
+                        }
+                    }
+                }
+            }
         }
         return false;
     }
@@ -144,13 +186,25 @@ public class GiveDrawer implements CommandExecutor, Listener {
                         New_Drawer.MaterialQuantity = DrawerQuantityInt;
                         New_Drawer.MaterialType = DrawerType;
 
+                        /*
+                        ItemFrame frame = blockPose.getWorld().spawn(blockPose.getLocation(), ItemFrame.class, entity -> {
+                            entity.setItem(new ItemStack(Material.valueOf(New_Drawer.MaterialType)));
+
+                            entity.setVisible(false);
+
+                            entity.setFixed(true);
+                            entity.setInvulnerable(true);
+                        });
+                        */
+
                         BlockData blockData = blockPose.getBlockData();
                         final BlockFace face;
 
+                        // 3. On lui donne sa valeur UNE SEULE FOIS
                         if (blockData instanceof org.bukkit.block.data.Directional) {
                             face = ((org.bukkit.block.data.Directional) blockData).getFacing();
                         } else {
-                            face = BlockFace.NORTH;
+                            face = BlockFace.NORTH; // Valeur par défaut si ce n'est pas un bloc directionnel
                         }
 
                         Location frameLoc = blockPose.getLocation().add(0.5, 0.5, 0.5).add(face.getDirection().multiply(0.5));
@@ -160,7 +214,7 @@ public class GiveDrawer implements CommandExecutor, Listener {
                             entity.setVisible(false);
                             entity.setFixed(true);
                             entity.setInvulnerable(true);
-                            entity.setFacingDirection(face);
+                            entity.setFacingDirection(face); // TRES IMPORTANT : Oriente le cadre pour qu'il soit plat
                         });
 
                         New_Drawer.itemFrameUUID = frame.getUniqueId();
@@ -236,7 +290,7 @@ public class GiveDrawer implements CommandExecutor, Listener {
                         if (blockData instanceof org.bukkit.block.data.Directional) {
                             face = ((org.bukkit.block.data.Directional) blockData).getFacing();
                         } else {
-                            face = BlockFace.NORTH;
+                            face = BlockFace.NORTH; // Valeur par défaut si ce n'est pas un bloc directionnel
                         }
 
                         Location frameLoc = InteractBlock.getLocation().add(0.5, 0.5, 0.5).add(face.getDirection().multiply(0.5));
@@ -246,7 +300,7 @@ public class GiveDrawer implements CommandExecutor, Listener {
                             entity.setVisible(false);
                             entity.setFixed(true);
                             entity.setInvulnerable(true);
-                            entity.setFacingDirection(face);
+                            entity.setFacingDirection(face); // TRES IMPORTANT : Oriente le cadre pour qu'il soit plat
                         });
 
                         drawer.itemFrameUUID = frame.getUniqueId();
