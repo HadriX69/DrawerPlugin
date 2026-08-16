@@ -5,7 +5,9 @@ main: fr.hadrix.drawer.Drawer
 api-version: '1.21'
 commands:
 
-  givedrawer:
-    description: give a drawer
-    permission: drawer.give
+  drawer:
+    description: Drawer Plugin Command
+    usage: /<command> [give|list]
+    permission : drawer.use
+    default: true
 
