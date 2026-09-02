@@ -1,6 +1,8 @@
-package fr.hadrix.drawer;
+package fr.hadrix.drawer.utils;
 
+import fr.hadrix.drawer.Drawer;
 import org.bukkit.Material;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class DrawerConstants {
     // GUI Settings
@@ -13,6 +15,7 @@ public class DrawerConstants {
     public static final int SLOT_UPGRADE_1 = 28;
     public static final int SLOT_UPGRADE_2 = 31;
     public static final int SLOT_UPGRADE_3 = 34;
+
 
     // Drawer Settings
     public static final int DEFAULT_MAX_ITEMS = 2048;
